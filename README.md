@@ -6,10 +6,10 @@
 
 1. checkstyle 规则:
     1. checkstyle/google_checks.xml
-    2. checkstyle/ys_checks.xml
+    2. checkstyle/apzda_checks.xml
 2. pmd 规则:
     1. pmd/pmd_example.xml
-    2. pmd/ys_ruleset.xml
+    2. pmd/apzda_ruleset.xml
 
 ### 使用方法
 
