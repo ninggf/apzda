@@ -21,11 +21,12 @@
  */
 def call(Map args) {
     println "dockerfile args: ${args}"
-
+    env.WORKSPACE = env.WORKSPACE ?: '.'
     env.server_name = args.service_name ?: (env.service_name ?: currentBuild.fullProjectName)
 
     if (!env.BUILD_DATE) {
-        env.BUILD_DATE = new Date(currentBuild.startTimeInMillis).format('yyyyMMdd', TimeZone.getTimeZone('GMT+08:00')) //构建日期
+        env.BUILD_DATE = new Date(currentBuild.startTimeInMillis).format('yyyyMMdd', TimeZone.getTimeZone('GMT+08:00'))
+        //构建日期
     }
 
     if (!args.containsKey("path")) {
@@ -38,7 +39,7 @@ def call(Map args) {
 
     args.server_port = args.server_port ?: 8080
     args.type = args.type ?: 'static'
-    if (args.type =~ /^(static|openresty)$/){
+    if (args.type =~ /^(static|openresty)$/) {
         // 加载nginx.conf for nginx and openresty
         String nginxConf = libraryResource "com/apzda/build/docker/${args.type}/nginx.conf"
         String basedir = args.basedir ?: ''

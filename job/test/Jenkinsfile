@@ -42,7 +42,7 @@ pipeline {
 
         stage('构建镜像') {
             steps {
-                dockerfile type: 'layerjar', service_name: 'hahaha', libs_dir: 'libs', args: "'--abc=1 -d'", path: 'hahaha'
+                dockerfile type: 'layerjar', service_name: 'hahaha', libs_dir: 'libs', args: "'--abc=1 -d'", path: 'tmp'
                 sh 'docker build -t apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID} --build_arg ABC=xx --compress .'
             }
         }
