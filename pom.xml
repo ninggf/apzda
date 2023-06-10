@@ -22,7 +22,7 @@
 
     <scm>
         <developerConnection>
-            scm:git@github.com:ninggf/apzda-jenkins-pipeline.git
+            scm:git:git@github.com:ninggf/apzda-jenkins-pipeline.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
