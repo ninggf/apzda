@@ -8,7 +8,10 @@
  *      <li> - basedir: type = nginx 或 openresty时指定,默认为""</li>
  *      <li> - module: 当项目为maven项目时指定, 单项目时不需要指定,默认为"."</li>
  *      <li> - jdkImage: jdk镜像名, java必须在路径上，默认使用openjdk:17</li>
+ *      <li> - nginxImage: nginx镜像名, 默认使用nginx:1.23.1-alpine</li>
+ *      <li> - restyImage: openresty镜像名, 默认使用bitnami/openresty:1.21.4-1</li>
  *      <li> - path: Dockerfile等文件存放位置,默认为"."或"${module}/target/docker"</li>
+ *      <li> - config: nginx 或 openresty 的配置文件路径</li>
  * </ul>
  */
 def call(Map args) {
@@ -26,7 +29,8 @@ def call(Map args) {
     env.WORKSPACE = env.WORKSPACE ?: '.'
     env.MVN_MODULE = args.module ?: false
     env.jdkImage = args.jdkImage ?: 'openjdk:17'
-
+    env.nginxImage = args.nginxImage ?: 'nginx:1.25.0-alpine'
+    env.restyImage = args.restyImage ?: 'bitnami/openresty:1.21.4-1'
     if (!args.containsKey("path")) {
         if (env.MVN_MODULE) {
             args.path = "${env.WORKSPACE}/${env.MVN_MODULE}/target/docker"
@@ -45,10 +49,25 @@ def call(Map args) {
         // 加载nginx.conf for nginx and openresty
         String nginxConf = libraryResource "com/apzda/build/tpl/${args.tpl}/nginx.conf"
         String basedir = args.basedir ?: ''
+        if (basedir == '/') {
+            basedir = ''
+        }
         nginxConf = nginxConf.replace('base_dir/', "$basedir/")
-
         writeFile file: "${args.path}/nginx.conf", text: nginxConf
-        writeFile file: "${args.path}/Dockerfile", text: libraryResource("com/apzda/build/tpl/${args.tpl}/Dockerfile")
+
+        String dockerFileContent = libraryResource("com/apzda/build/tpl/${args.tpl}/Dockerfile")
+        if (args.tpl == 'nginx') {
+            dockerFileContent = dockerFileContent.replace("@nginxImage@", $env.nginxImage)
+            if (args.containsKey("config") && args.config instanceof String) {
+                dockerFileContent = dockerFileContent.replace('/etc/nginx/', args.config)
+            }
+        } else {
+            dockerFileContent = dockerFileContent.replace("@restyImage@", $env.restyImage)
+            if (args.containsKey("config") && args.config instanceof String) {
+                dockerFileContent = dockerFileContent.replace('/opt/bitnami/openresty/nginx/conf/', args.config)
+            }
+        }
+        writeFile file: "${args.path}/Dockerfile", text: dockerFileContent
     } else {
         // 写脚本
         def bins = ['docker-entrypoint', 'env']
