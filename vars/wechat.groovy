@@ -1,4 +1,3 @@
-#!groovy
 /**
  *
  * @param args 参数

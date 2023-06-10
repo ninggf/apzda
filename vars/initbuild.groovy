@@ -28,7 +28,7 @@ def call(Map args) {
     }
 
     if (args.tag_with_buildid != false) {
-        tags << "${BUILD_ID}"
+        tags << env.BUILD_ID
     }
 
     env.IMAGE_WITH_TAG = image_with_tag + ':' + tags.join('-')

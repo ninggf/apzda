@@ -20,7 +20,7 @@ def call(Map<String, String> args) {
     checkout([$class: 'GitSCM', branches: [[name: args.branch]], gitTool: args.gitTool, doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: "${args.credentialsId}", url: "${args.url}"]]])
     def last_start_date = getLastSuccessTime();
 
-    def git_log = 'git log --pretty=format:"> - %cn@%ad - %s" --date=format:"%Y-%m-%d %H:%M" --since="' + last_start_date + '" '
+    def git_log = 'git log --pretty=format:"> - %cn@%ad - %s" --date=format:"%Y-%m-%d %H:%M:%S" --since="' + last_start_date + '" '
     env.commitChangeset = sh(returnStdout: true, script: "${git_log}").trim()
 
     env.gitCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()

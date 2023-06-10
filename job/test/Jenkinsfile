@@ -1,5 +1,3 @@
-import jdk.nashorn.internal.parser.Token
-
 @Library('commons') _
 
 pipeline {
@@ -26,7 +24,7 @@ pipeline {
     stages {
         stage('初始化') {
             steps {
-                initbuild [:]
+                initbuild env: 'UAT', service_name: 'service-name' // 初始化一些变量
             }
         }
 
@@ -38,13 +36,13 @@ pipeline {
 
         stage('构建应用') {
             steps {
-                sh 'mvn --help'
+                sh 'mvn -T 8C package -P prod'
             }
         }
 
         stage('构建镜像') {
             steps {
-                dockerfile type: 'layerjar', service_name: 'hahaha', libs_dir: 'libs', args: "'--abc=1 -d'"
+                dockerfile type: 'layerjar', service_name: 'hahaha', libs_dir: 'libs', args: "'--abc=1 -d'", path: 'hahaha'
                 sh 'docker build -t apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID} --build_arg ABC=xx --compress .'
             }
         }
@@ -56,12 +54,12 @@ pipeline {
         }
         stage('部署应用') {
             steps {
-                // rancherRedeploy alwaysPull: true, credential: "", images: "apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID}", workload: "/project/${env.rancher_p}/workloads/deployment:${env.namespace}:${env.server_name}"
+                // rancherRedeploy alwaysPull: true, credential: "", images: "apzda/${env.service_name}:${env.BUILD_DATE}-${env.BUILD_ID}", workload: "/project/${env.rancher_p}/workloads/deployment:${env.namespace}:${env.server_name}"
             }
         }
         post {
             always {
-                //wechat token: "abc"
+                // wechat token: "abc"
             }
         }
     }

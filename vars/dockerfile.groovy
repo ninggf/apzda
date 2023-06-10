@@ -22,7 +22,7 @@
 def call(Map args) {
     println "dockerfile args: ${args}"
 
-    env.server_name = args.service_name ? args.service_name : (env.service_name ?: currentBuild.fullProjectName)
+    env.server_name = args.service_name ?: (env.service_name ?: currentBuild.fullProjectName)
 
     if (!env.BUILD_DATE) {
         env.BUILD_DATE = new Date(currentBuild.startTimeInMillis).format('yyyyMMdd', TimeZone.getTimeZone('GMT+08:00')) //构建日期
@@ -91,7 +91,7 @@ port     = ${args.server_port}"""
             config += "\nargs     = ${args.args}"
         }
 
-        config += "\n# end of service configuration"
+        config += "\n# end of service configuration\n"
 
         // 写配置文件
         writeFile file: "${args.path}/config/services.ini", text: config

@@ -21,7 +21,7 @@ class TestExampleDeclarativeJob extends DeclarativePipelineTest {
         helper.addShMock("java -version", "1.8.0", 0)
 
         def library = library().name('commons')
-                .defaultVersion('<notNeeded>')
+                .defaultVersion('1.2.1')
                 .allowOverride(true)
                 .implicit(true)
                 .targetPath('<notNeeded>')
