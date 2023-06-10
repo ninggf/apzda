@@ -39,6 +39,7 @@ pipeline {
    environment {
       SERVICE_NAME = "service-name"
       SERVICE_ENV = "UAT"
+      SERVICE_VER = "1.0.0-SNAPSHOT"
    }
    stages {
       stage('scm') {
@@ -48,7 +49,7 @@ pipeline {
       }
       stage("套用Assembly模板") {
          steps {
-            assembly layerjar: true, docker: true, assembly: true
+            assembly module: "${SERVICE_NAME}", layerjar: true, docker: true, assembly: true
          }
       }
       stage('Build') {
@@ -56,9 +57,14 @@ pipeline {
             sh 'mvn -T 8C package -P prod'
          }
       }
-      stage('JAVA - 镜像模板 - layerjar') {
+      stage('套用镜像模板 - layerjar') {
          steps {
-            dockertpl tpl: 'layerjar', module: 'apzda-demo', jdkImage: 'openjdk:17'
+            dockertpl tpl: 'layerjar', module: "${SERVICE_NAME}", jdkImage: 'openjdk:17'
+         }
+      }
+      stage("Docker build") {
+         steps {
+            sh "docker build -t apzda/${SERVICE_NAME}:${BUILD_DATE}-${BUILD_ID} --build_arg SERVICE_NAME=$SERVICE_NAME --build-arg SERVICE_VER=$SERVICE_VER --build-arg SERVICE_JAR=$SERVICE_NAME-$SERVICE_VER.jar --compress ./$SERVICE_NAME/target/docker"
          }
       }
       stage('NGINX - 镜像模板') {
