@@ -10,7 +10,7 @@
  */
 def call(Map args) {
     def res = manager.getResult()
-    def icon= '○'
+    def icon = '○'
     def res_color = 'info'
 
     if (res == 'SUCCESS') {
@@ -28,11 +28,21 @@ def call(Map args) {
     wrap([$class: 'BuildUser']) {
         env.total_time = "${currentBuild.durationString}".split("and counting")[0]
 
-        def start_time = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('GMT+08:00')) //开始构建时间
-        def server_name = env.server_name ?: currentBuild.fullProjectName
+        if (!env.gitCommit) {
+            def last_start_date = getLastSuccessTime();
+
+            def git_log = 'git log --pretty=format:"> - %cn@%ad - %s" --date=format:"%Y-%m-%d %H:%M:%S" --since="' + last_start_date + '" '
+            env.commitChangeset = sh(returnStdout: true, script: "${git_log}").trim()
+
+            env.gitCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+        }
+
+        def start_time = new Date(currentBuild.startTimeInMillis).format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('GMT+08:00'))
+        //开始构建时间
+        def server_name = env.SERVICE_NAME ?: currentBuild.fullProjectName
         def commitChangeset = env.commitChangeset ?: ''
         def git_project_branch = env.git_project_branch ?: ''
-        def server_env = env.service_env ?: ''
+        def server_env = env.SERVICE_ENV ?: ''
         def commit = env.gitCommit ?: ''
 
         def head = "<font color=\\\"${res_color}\\\">${icon}</font> **${JOB_NAME}${BUILD_DISPLAY_NAME}**(${env.description})@**${server_env}**[构建${res}](${BUILD_URL}):"
@@ -56,4 +66,23 @@ def call(Map args) {
             echo "${type} => ${message}"
         }
     }
+}
+
+/**
+ * 获取上次构建成功时间
+ * @return 上次构建成功时间
+ */
+def getLastSuccessTime() {
+    def res = new Date().format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('GMT+08:00'))
+    def build = currentBuild.previousBuild
+
+    while (build != null) {
+        if (build.result == "SUCCESS") {
+            res = currentBuild.rawBuild.getPreviousBuild().getTime().format('yyyy-MM-dd HH:mm:ss', TimeZone.getTimeZone('GMT+08:00'))
+            break
+        }
+        build = build.previousBuild
+    }
+
+    return res
 }

@@ -14,7 +14,7 @@
             <include>*:*:*SNAPSHOT</include>
         </into>
         <into layer="company-dependencies">
-            <include>com.apzda:*</include>
+            <includeModuleDependencies/>
         </into>
         <into layer="dependencies"/>
     </dependencies>
@@ -22,8 +22,8 @@
     <layerOrder>
         <layer>dependencies</layer>
         <layer>spring-boot-loader</layer>
-        <layer>snapshot-dependencies</layer>
         <layer>company-dependencies</layer>
+        <layer>snapshot-dependencies</layer>
         <layer>application</layer>
     </layerOrder>
 </layers>
