@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="whizbang PMD ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        This ruleset defines the PMD rules for project "scafolld".
+    </description>
+
+    <!-- Best Practices: Rules which enforce generally accepted best practices. -->
+    <rule ref="category/java/bestpractices.xml"/>
+
+    <!-- Design: Rules that help you discover design issues. -->
+    <rule ref="category/java/design.xml"/>
+
+    <!-- Code Style: Rules which enforce a specific coding style. -->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="AtLeastOneConstructor"/>
+    </rule>
+
+    <!-- Error Prone: Rules to detect constructs that are either broken, extremely confusing or prone to runtime errors. -->
+    <rule ref="category/java/errorprone.xml"/>
+
+    <!-- Multithreading: Rules that flag issues when dealing with multiple threads of execution. -->
+    <rule ref="category/java/multithreading.xml"/>
+
+    <!-- Performance: Rules that flag suboptimal code. -->
+    <rule ref="category/java/performance.xml"/>
+
+    <!-- Security: Rules that flag potential security flaws. -->
+    <rule ref="category/java/security.xml"/>
+
+    <!-- Documentation:  Rules that are related to code documentation.-->
+    <rule ref="category/java/documentation.xml"/>
+
+    <!-- many more rules are available at https://pmd.github.io/pmd-6.38.0/pmd_rules_java.html -->
+</ruleset>

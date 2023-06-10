@@ -1,0 +1,68 @@
+import jdk.nashorn.internal.parser.Token
+
+@Library('commons') _
+
+pipeline {
+    agent none
+
+    tools {
+        jdk "jdk"
+        maven "3.6.2"
+        nodejs "12.8.3"
+        git "Default"
+    }
+
+    options {
+        //设置在项目打印日志时带上对应时间
+        timestamps()
+        // 设置流水线运行超过n分钟，Jenkins将中止流水线
+        timeout time: 60, unit: 'MINUTES'
+        // 禁止并行构建
+        disableConcurrentBuilds()
+        // 表示保留100次构建历史
+        buildDiscarder(logRotator(numToKeepStr: '100', artifactNumToKeepStr: '0'))
+    }
+
+    stages {
+        stage('初始化') {
+            steps {
+                initbuild [:]
+            }
+        }
+
+        stage('获取代码') {
+            steps {
+                pullcode branch: "ahaha", credentialsId: "abc", url: "https://asdfadsf.com/project.git"
+            }
+        }
+
+        stage('构建应用') {
+            steps {
+                sh 'mvn --help'
+            }
+        }
+
+        stage('构建镜像') {
+            steps {
+                dockerfile type: 'layerjar', service_name: 'hahaha', libs_dir: 'libs', args: "'--abc=1 -d'"
+                sh 'docker build -t apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID} --build_arg ABC=xx --compress .'
+            }
+        }
+        stage('发布镜像') {
+            steps {
+                sh 'docker push apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID}'
+                sh 'docker rmi apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID}'
+            }
+        }
+        stage('部署应用') {
+            steps {
+                // rancherRedeploy alwaysPull: true, credential: "", images: "apzda/${env.service_name}:${BUILD_DATE}-${BUILD_ID}", workload: "/project/${env.rancher_p}/workloads/deployment:${env.namespace}:${env.server_name}"
+            }
+        }
+        post {
+            always {
+                //wechat token: "abc"
+            }
+        }
+    }
+}
