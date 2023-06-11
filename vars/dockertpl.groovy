@@ -31,6 +31,7 @@ def call(Map args) {
     env.jdkImage = args.jdkImage ?: 'openjdk:17'
     env.nginxImage = args.nginxImage ?: 'nginx:1.25.0-alpine'
     env.restyImage = args.restyImage ?: 'bitnami/openresty:1.21.4-1'
+
     if (!args.containsKey("path")) {
         if (env.MVN_MODULE) {
             args.path = "${env.WORKSPACE}/${env.MVN_MODULE}/target/docker"
@@ -44,6 +45,7 @@ def call(Map args) {
             args.path = "${env.WORKSPACE}/${args.path}"
         }
     }
+    echo "apply docker templates to ${args.path}"
 
     if (args.tpl =~ /^(nginx|openresty)$/) {
         // 加载nginx.conf for nginx and openresty
