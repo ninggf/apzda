@@ -25,58 +25,65 @@
 ```groovy
 
 pipeline {
-    agent any
+   agent any
 
-    options {
-        // 启用颜色支持
-        ansiColor('xterm')
-        //设置在项目打印日志时带上对应时间
-        timestamps()
-        // 设置流水线运行超过n分钟，Jenkins将中止流水线
-        timeout time: 60, unit: 'MINUTES'
-        // 禁止并行构建
-        disableConcurrentBuilds()
-        // 表示保留100次构建历史
-        buildDiscarder(logRotator(numToKeepStr: '100', artifactNumToKeepStr: '0'))
-    }
-    environment {
-        SERVICE_NAME = "service-name"
-        SERVICE_ENV = "UAT"
-        SERVICE_VER = "1.0.0-SNAPSHOT"
-    }
-    stages {
-        stage('scm') {
-            steps {
-                pullcode branch: "ahaha", credentialsId: "abc", url: "https://asdfadsf.com/project.git"
-            }
-        }
-        stage("套用Assembly模板") {
-            steps {
-                assembly module: "${SERVICE_NAME}", layerjar: true, docker: true, assembly: true
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'mvn -T 8C package -P prod'
-            }
-        }
-        stage('套用镜像模板 - layerjar') {
-            steps {
-                dockertpl tpl: 'layerjar', module: "${SERVICE_NAME}", jdkImage: 'openjdk:17'
-            }
-        }
-        stage("Docker build") {
-            steps {
-                sh "docker build -t apzda/${SERVICE_NAME}:${BUILD_DATE}-${BUILD_ID} --build_arg SERVICE_NAME=$SERVICE_NAME --build-arg SERVICE_VER=$SERVICE_VER --build-arg SERVICE_JAR=$SERVICE_NAME-$SERVICE_VER.jar --compress ./$SERVICE_NAME/target/docker"
-            }
-        }
-        stage('套用镜像模板 - nginx') {
-            steps {
-                dockertpl tpl: 'nginx'
-                sh "docker build -t apzda/nginx:${BUILD_DATE}-${BUILD_ID} --compress --no-cache ."
-            }
-        }
-    }
+   options {
+      // 启用颜色支持
+      ansiColor('xterm')
+      //设置在项目打印日志时带上对应时间
+      timestamps()
+      // 设置流水线运行超过n分钟，Jenkins将中止流水线
+      timeout time: 60, unit: 'MINUTES'
+      // 禁止并行构建
+      disableConcurrentBuilds()
+      // 表示保留100次构建历史
+      buildDiscarder(logRotator(numToKeepStr: '100', artifactNumToKeepStr: '0'))
+   }
+   environment {
+      SERVICE_NAME = "service-name"
+      SERVICE_ENV = "UAT"
+      SERVICE_VER = "1.0.0-SNAPSHOT"
+   }
+
+   stages {
+      stage('scm') {
+         steps {
+            pullcode branch: "ahaha", credentialsId: "abc", url: "https://asdfadsf.com/project.git"
+         }
+      }
+      stage("套用Assembly模板") {
+         steps {
+            assembly module: "${SERVICE_NAME}", layerjar: true, docker: true, assembly: true
+         }
+      }
+      stage('Build') {
+         steps {
+            sh 'mvn -T 8C package -P prod'
+         }
+      }
+      stage('套用镜像模板 - layerjar') {
+         steps {
+            dockertpl tpl: 'layerjar', module: "${SERVICE_NAME}", jdkImage: 'openjdk:17'
+         }
+      }
+      stage("Docker build") {
+         steps {
+            sh "docker build -t apzda/${SERVICE_NAME}:${BUILD_DATE}-${BUILD_ID} --build_arg SERVICE_NAME=$SERVICE_NAME --build-arg SERVICE_VER=$SERVICE_VER --build-arg SERVICE_JAR=$SERVICE_NAME-$SERVICE_VER.jar --compress ./$SERVICE_NAME/target/docker"
+         }
+      }
+      stage('套用镜像模板 - nginx') {
+         steps {
+            dockertpl tpl: 'nginx'
+            sh "docker build -t apzda/nginx:${BUILD_DATE}-${BUILD_ID} --compress --no-cache ."
+         }
+      }
+   }
+
+   post {
+      always {
+         wechat token: ''
+      }
+   }
 }
 ```
 

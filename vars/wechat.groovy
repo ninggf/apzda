@@ -46,14 +46,14 @@ def call(Map args) {
         def commit = env.gitCommit ?: ''
 
         def head = "<font color=\\\"${res_color}\\\">${icon}</font> **${JOB_NAME}${BUILD_DISPLAY_NAME}**(${env.description})@**${server_env}**[构建${res}](${BUILD_URL}):"
-        def change_log = ">变更记录：\n${commitChangeset}"
-        def gcommit = ">Commit: <font color=\\\"comment\\\">${commit}</font>"
-        def publish_user = ">部署人：<font color=\\\"comment\\\">${BUILD_USER}</font>"
-        def total_time = ">持续时间：<font color=\\\"comment\\\">${total_time}</font>"
-        def publish_branch = ">部署分支：<font color=\\\"comment\\\">${git_project_branch}</font>"
-        def publish_server = ">部署服务：<font color=\\\"comment\\\">${server_name}</font>"
-        def publish_time = ">部署时间：<font color=\\\"comment\\\">${start_time}</font>"
-        def image = ">镜像标签: <font color=\\\"comment\\\">${env.IMAGE_WITH_TAG}</font>"
+        def change_log = "> 变更记录：\n${commitChangeset}"
+        def gcommit = "> Commit: <font color=\\\"comment\\\">${commit}</font>"
+        def publish_user = "> 部署人：<font color=\\\"comment\\\">${BUILD_USER}</font>"
+        def total_time = "> 持续时间：<font color=\\\"comment\\\">${total_time}</font>"
+        def publish_branch = "> 部署分支：<font color=\\\"comment\\\">${git_project_branch}</font>"
+        def publish_server = "> 部署服务：<font color=\\\"comment\\\">${server_name}</font>"
+        def publish_time = "> 部署时间：<font color=\\\"comment\\\">${start_time}</font>"
+        def image = "> 镜像标签: <font color=\\\"comment\\\">${env.IMAGE_WITH_TAG}</font>"
 
         def msg = "\"${head}" + "\n" + "${publish_user}" + "\n" + "${publish_server}\n${image}" + "\n" + "${total_time}" + "\n" + "${publish_branch}" + "\n" + "${publish_time}" + "\n" + "${gcommit}\n${change_log}\""
         def body = "{ \"msgtype\": \"markdown\", \"markdown\": { \"content\": ${msg} } }"
@@ -63,7 +63,7 @@ def call(Map args) {
         if (args.token) {
             httpRequest contentType: type, httpMode: 'POST', requestBody: "${message}", responseHandle: 'NONE', url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${args.token}", wrapAsMultipart: false
         } else {
-            echo "${type} => ${message}"
+            echo "${type} => \n${message}"
         }
     }
 }
