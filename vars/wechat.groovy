@@ -45,7 +45,7 @@ def call(Map args) {
         def server_env = env.SERVICE_ENV ?: ''
         def commit = env.gitCommit ?: ''
 
-        def head = "<font color=\\\"${res_color}\\\">${icon}</font> **${JOB_NAME}${BUILD_DISPLAY_NAME}** (ENV: ${server_env: ''}) [构建${res}](${BUILD_URL}):"
+        def head = "<font color=\\\"${res_color}\\\">${icon}</font> **${JOB_NAME}${BUILD_DISPLAY_NAME}** (ENV: ${server_env}) [构建${res}](${BUILD_URL}):"
         def change_log = "> 变更记录：\n${commitChangeset}"
         def gcommit = "> Commit: <font color=\\\"comment\\\">${commit}</font>"
         def publish_user = "> 部署人：<font color=\\\"comment\\\">${BUILD_USER}</font>"
