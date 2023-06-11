@@ -4,7 +4,7 @@
 
     <groupId>com.apzda.build</groupId>
     <artifactId>apzda-jenkins-library</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5-SNAPSHOT</version>
     <name>Jenkins Library</name>
 
     <properties>
@@ -28,7 +28,7 @@
         <developerConnection>
             scm:git:git@github.com:ninggf/apzda-jenkins-pipeline.git
         </developerConnection>
-        <tag>v1.2.4</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
