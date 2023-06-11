@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.apzda.build</groupId>
-    <artifactId>build-tools</artifactId>
+    <artifactId>apzda-jenkins-library</artifactId>
     <version>1.2.4-SNAPSHOT</version>
+    <name>Jenkins Library</name>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 不需要部署到远程 -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- 不需要安装到本地 -->
+        <maven.install.skip>true</maven.install.skip>
     </properties>
 
     <repositories>
@@ -70,11 +76,21 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
         <plugins>
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
@@ -83,13 +99,13 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <generateReleasePoms>false</generateReleasePoms>
-                    <arguments>-DskipTests=true -Dmaven.skip.test=true -Dmaven.site.skip=true</arguments>
+                    <arguments>-Dmaven.site.skip=true</arguments>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.13.1</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -101,7 +117,7 @@
                     <dependency>
                         <groupId>org.apache.groovy</groupId>
                         <artifactId>groovy</artifactId>
-                        <version>4.0.2</version>
+                        <version>4.0.12</version>
                         <scope>runtime</scope>
                     </dependency>
                 </dependencies>

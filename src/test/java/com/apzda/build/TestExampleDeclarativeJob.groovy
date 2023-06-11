@@ -19,7 +19,7 @@ class TestExampleDeclarativeJob extends DeclarativePipelineTest {
     void setUp() throws Exception {
         super.setUp()
         helper.addShMock("java -version", "1.8.0", 0)
-
+        addEnvVar("BUILD_ID", "1")
         def library = library().name('commons')
                 .defaultVersion('1.2.1')
                 .allowOverride(true)
@@ -32,7 +32,7 @@ class TestExampleDeclarativeJob extends DeclarativePipelineTest {
 
     @Test
     void should_execute_without_errors() throws Exception {
-        runScript("job/test/Jenkinsfile")
+        runScript("src/test/resources/Jenkinsfile")
 
         assertJobStatusSuccess()
         printCallStack()

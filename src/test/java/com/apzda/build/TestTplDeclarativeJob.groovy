@@ -32,7 +32,7 @@ class TestTplDeclarativeJob extends DeclarativePipelineTest {
 
     @Test
     void should_execute_without_errors() throws Exception {
-        runScript("job/test/tpl.Jenkinsfile")
+        runScript("src/test/resources/tpl.Jenkinsfile")
 
         assertJobStatusSuccess()
         printCallStack()
