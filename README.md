@@ -18,6 +18,7 @@
 1. Groovy PostBuild
 2. build-user-vars-plugin
 3. HTTP Request
+4. AnsiColor
 
 ### 一般使用
 
@@ -27,6 +28,8 @@ pipeline {
     agent any
 
     options {
+        // 启用颜色支持
+        ansiColor('xterm')
         //设置在项目打印日志时带上对应时间
         timestamps()
         // 设置流水线运行超过n分钟，Jenkins将中止流水线
@@ -69,7 +72,7 @@ pipeline {
         }
         stage('套用镜像模板 - nginx') {
             steps {
-                dockertpl tpl: 'nginx', basedir: ''
+                dockertpl tpl: 'nginx'
                 sh "docker build -t apzda/nginx:${BUILD_DATE}-${BUILD_ID} --compress --no-cache ."
             }
         }
@@ -77,7 +80,7 @@ pipeline {
 }
 ```
 
-### vars 详解
+### VARS
 
 1. `pullcode`: 拉取代码
     - `branch`: 分支

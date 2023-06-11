@@ -57,12 +57,12 @@ def call(Map args) {
 
         String dockerFileContent = libraryResource("com/apzda/build/tpl/${args.tpl}/Dockerfile")
         if (args.tpl == 'nginx') {
-            dockerFileContent = dockerFileContent.replace("@nginxImage@", $env.nginxImage)
+            dockerFileContent = dockerFileContent.replace("@nginxImage@", env.nginxImage)
             if (args.containsKey("config") && args.config instanceof String) {
                 dockerFileContent = dockerFileContent.replace('/etc/nginx/', args.config)
             }
         } else {
-            dockerFileContent = dockerFileContent.replace("@restyImage@", $env.restyImage)
+            dockerFileContent = dockerFileContent.replace("@restyImage@", env.restyImage)
             if (args.containsKey("config") && args.config instanceof String) {
                 dockerFileContent = dockerFileContent.replace('/opt/bitnami/openresty/nginx/conf/', args.config)
             }
