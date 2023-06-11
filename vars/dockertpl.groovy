@@ -27,19 +27,19 @@ def call(Map args) {
     }
 
     env.WORKSPACE = env.WORKSPACE ?: '.'
-    env.MVN_MODULE = args.module ?: false
+    env.MVN_MODULE = args.module ?: ''
     env.jdkImage = args.jdkImage ?: 'openjdk:17'
     env.nginxImage = args.nginxImage ?: 'nginx:1.25.0-alpine'
     env.restyImage = args.restyImage ?: 'bitnami/openresty:1.21.4-1'
 
     if (!args.containsKey("path")) {
-        if (env.MVN_MODULE) {
+        if (env.MVN_MODULE != '') {
             args.path = "${env.WORKSPACE}/${env.MVN_MODULE}/target/docker"
         } else {
             args.path = "${env.WORKSPACE}"
         }
     } else {
-        if (env.MVN_MODULE) {
+        if (env.MVN_MODULE != '') {
             args.path = "${env.WORKSPACE}/${env.MVN_MODULE}/${args.path}"
         } else {
             args.path = "${env.WORKSPACE}/${args.path}"
