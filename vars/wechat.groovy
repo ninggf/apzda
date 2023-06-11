@@ -33,7 +33,7 @@ def call(Map args) {
 
             def git_log = 'git log --pretty=format:"> - %cn@%ad - %s" --date=format:"%Y-%m-%d %H:%M:%S" --since="' + last_start_date + '" '
             env.commitChangeset = sh(returnStdout: true, script: "${git_log}").trim()
-            if (!env.commitChangeset) {
+            if (env.commitChangeset == '') {
                 git_log = 'git log --pretty=format:"> - %cn@%ad - %s" --date=format:"%Y-%m-%d %H:%M:%S" -n 3'
                 env.commitChangeset = sh(returnStdout: true, script: "${git_log}").trim()
             }
