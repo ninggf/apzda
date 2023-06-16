@@ -47,9 +47,9 @@ if [ "$1" = "-mode" ]; then
     RUN_MODE=$1
     shift
 
-    export JAVA_OPTS="${JAVA_OPTS} -Dclient.encoding.override=UTF-8 -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
+    export JAVA_OPTS="${JAVA_OPTS} -Djava.awt.headless=true -Dclient.encoding.override=UTF-8 -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
     export JAVA_OPTS="${JAVA_OPTS} $JVM_GC_OPTS $JVM_OOM_OPTS"
-    export JAVA_OPTS="${JAVA_OPTS} -Dserver.port=8080 -Dmanagement.server.port=8081"
+    export JAVA_OPTS="${JAVA_OPTS} -Dserver.port=${SERVER_PORT:-8080}"
     # echo "JAVA_OPTS: $JAVA_OPTS"
 
     if [ "$RUN_MODE" = "launcher" ]; then
